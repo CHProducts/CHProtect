@@ -1,10 +1,11 @@
 const Discord = require('discord.js');
-const client = new Discord.Client({
-    intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.MessageContent]
-});
 const fs = require('fs');
 require('dotenv').config();
 const spamMap = new Map();
+
+const client = new Discord.Client({
+    intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.MessageContent]
+});
 
 client.commands = new Discord.Collection();
 
@@ -21,7 +22,7 @@ for (const file of commandFiles) {
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user?.tag}!`);
-    client.user.setActivity('てすとちう')
+    client.user.setActivity('/help | Created By CatHouse Products')
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -117,6 +118,17 @@ client.on('interactionCreate', async (interaction) => {
             await interaction.update({ embeds: [embed], components: [row] }).catch(() => { });
         };
     };
+    if (interaction.isAutocomplete) {
+        const command = client.commands.get(interaction.commandName);
+
+        if (!command) return;
+
+        try {
+            await command.autocomplete(interaction);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 });
 
 client.on('messageCreate', async (message) => {
@@ -152,12 +164,29 @@ client.on('messageCreate', async (message) => {
         await message.delete();
     }
     if (message.author.bot || message.member.permissions.has(Discord.PermissionsBitField.Flags.ModerateMembers)) return;
+    const data = require('./jsons/banword.json');
+    const serverId = message.guild.id;
+    const serverData = data[serverId];
+    if (serverData && Object.keys(serverData).length > 0) {
+        for (const text in serverData) {
+            if (message.content.includes(text)) {
+                message.member.timeout(serverData[text] * 60 * 1000, 'サーバー内で設定されている禁止ワードの発言')
+                    .then(() => {
+                        message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: '禁止ワード検知', value: '禁止ワードを発言したためタイムアウトされました。' }).setColor('#ff0000').setFooter({ text: 'None 0.0.1' })] })
+                    })
+                    .catch(() => { })
+            }
+        }
+    }
     const spamKey = `${message.author.id}-${message.content}`;
     let spamCount = spamMap.get(spamKey) || 0;
 
     if (spamCount >= 4) {
-        message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'スパム検知', value: `${message.author}はタイムアウトされました。` }).setColor('ff0000').setFooter({ text: 'None 0.0.1' })] });
-        message.member.timeout(2 * 60 * 1000);
+        message.member.timeout(2 * 60 * 1000, '同じ内容の発言を繰り返したため')
+        .then(() => {
+            message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'スパム検知', value: `${message.author}はタイムアウトされました。` }).setColor('ff0000').setFooter({ text: 'None 0.0.1' })] })
+        })
+        .catch(() => { })
         return;
     };
 
