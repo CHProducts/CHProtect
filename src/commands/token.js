@@ -29,7 +29,7 @@ module.exports = {
                     const errorstack = '```js\n' + err.stack + '```';
                     interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] })
                 } else {
-                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を有効化しました。' }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を有効化しました。' }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 }
             });
         };
@@ -47,7 +47,7 @@ module.exports = {
                     const errorstack = '```js\n' + err.stack + '```';
                     interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] })
                 } else {
-                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を無効化しました。' }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を無効化しました。' }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 }
             });
         };

@@ -40,7 +40,7 @@ module.exports = {
         );
     },
     async execute(interaction) {
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ModerateMembers)) return interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error(権限不足)', value: 'Botにメンバーをタイムアウトする権限(`ModerateMembers`)が付与されていないため設定できません。\n管理者に問い合わせてください。' }).setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() }).setColor('#ff0000')], ephemeral: true });
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ModerateMembers)) return interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error(権限不足)', value: 'Botにメンバーをタイムアウトする権限(`ModerateMembers`)が付与されていないため設定できません。\n管理者に問い合わせてください。' }).setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() }).setColor('#ff0000')], ephemeral: true });
         const subcommand = interaction.options.getSubcommand();
         if (subcommand === 'add') {
             const text = interaction.options.getString('text')
@@ -50,36 +50,36 @@ module.exports = {
             if (!serverData) {
                 serverData = {};
                 data[serverId] = serverData;
-            }
+            };
             serverData[text] = 2;
             fs.writeFile(`${__dirname}/../jsons/banword.json`, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     const errorstack = '```js\n' + err.stack + '```';
                     interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] })
                 } else {
-                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: `「${text}」を禁止ワードに追加しました。` }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
-                }
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: `「${text}」を禁止ワードに追加しました。` }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                };
             });
-        }
+        };
         if (subcommand === 'remove') {
             const text = interaction.options.getString('text')
             const serverId = interaction.guild.id;
             const data = require(`${__dirname}/../jsons/banword.json`);
             const serverData = data[serverId];
             if (!serverData || !serverData[text]) {
-                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: `${text}という禁止ワードは登録されていません。` }).setColor('ff0000').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: `${text}という禁止ワードは登録されていません。` }).setColor('ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 return;
-            }
+            };
             delete serverData[text];
             fs.writeFile(`${__dirname}/../jsons/banword.json`, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     const errorstack = '```js\n' + err.stack + '```';
                     interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] });
                 } else {
-                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: `「${text}」を禁止ワードから除外しました。` }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
-                }
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: `「${text}」を禁止ワードから除外しました。` }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                };
             });
-        }
+        };
         if (subcommand === 'setting') {
             const text = interaction.options.getString('text');
             const time = interaction.options.getInteger('time')
@@ -87,34 +87,34 @@ module.exports = {
             const data = require(`${__dirname}/../jsons/banword.json`);
             const serverData = data[serverId];
             if (!serverData || Object.keys(serverData).length === 0) {
-                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '禁止ワードの登録がありません。' }).setColor('#ff0000').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '禁止ワードの登録がありません。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 return;
-            }
+            };
             if (!serverData[text]) {
-                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: `${text}という禁止ワードは登録されていません。` }).setColor('ff0000').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: `${text}という禁止ワードは登録されていません。` }).setColor('ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 return;
-            }
-            if (time < 1) return interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '引数「time」には1以上の数を指定してください。' }).setColor('ff0000').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+            };
+            if (time < 1) return interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '引数「time」には1以上の数を指定してください。' }).setColor('ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
             data[interaction.guild.id][text] = time;
 
             const newData = JSON.stringify(data, null, 2);
 
             fs.writeFileSync(`${__dirname}/../jsons/banword.json`, newData);
-            await interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: '設定を変更しました。' }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true })
-        }
+            await interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: '設定を変更しました。' }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true })
+        };
         if (subcommand === 'list') {
             const serverId = interaction.guild.id;
             const data = require(`${__dirname}/../jsons/banword.json`);
             const serverData = data[serverId];
             if (!serverData || Object.keys(serverData).length === 0) {
-                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '禁止ワードの登録がありません。' }).setColor('#ff0000').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+                interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '禁止ワードの登録がありません。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 return;
-            }
+            };
             let banwordList = '';
             for (const text in serverData) {
                 banwordList += `${text} : タイムアウト時間 ${serverData[text]}分\n`;
-            }
-            await interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: '禁止ワード一覧', value: banwordList }).setColor('#3CB371').setFooter({ text: 'None 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
-        }
+            };
+            await interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: '禁止ワード一覧', value: banwordList }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
+        };
     }
 };
