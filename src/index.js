@@ -359,6 +359,6 @@ client.login(process.env.TOKEN)
  * @param {Error} error 
  */
 async function stderr(error) {
-    const webhook = new Discord.WebhookClient({ url: 'Webhook url' });
+    const webhook = new Discord.WebhookClient({ url: process.env.ERRORLOG_URL });
     await webhook.send({ embeds: [new Discord.EmbedBuilder().setTitle(error.name).addFields({ name: 'ERROR STACK', value: '```js\n' + error.stack + '\n```' }).setTimestamp().setColor('#ff0000')] });
 };
