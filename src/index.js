@@ -44,7 +44,12 @@ client.on('interactionCreate', async (interaction) => {
     if (!interaction.guild) return interaction.reply('DMでは使用できません。');
     if (interaction.isChatInputCommand()) {
         const command = client.commands.get(interaction.commandName);
-        if (!command) return interaction.reply({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'Error', value: '実装されていないコマンドです。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })], ephemeral: true });
+        if (!command) {
+            interaction.reply({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'Error', value: '実装されていないコマンドです。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })], ephemeral: true });
+            const channel = await client.channels.fetch('1155111506107699220');
+            channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'Error', value: `処理が存在しないコマンド </${interaction.commandName}:${interaction.commandId}> が実行されました。` }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] });
+            return;
+        };
         try {
             await command.execute(interaction);
         } catch (error) {
@@ -161,7 +166,7 @@ client.on('interactionCreate', async (interaction) => {
             const embed = new Discord.EmbedBuilder()
                 .setTitle('ヘルプ 4/4')
                 .setDescription('デフォルトで動作する機能')
-                .addFields({ name: 'スパム検知', value: '特定の時間内に数回連続で同じ発言をしたユーザーにタイムアウト処罰を実行します。\n**ただし、タイムアウト権限を所持しているユーザーは対象外となります。**\n秒数や回数、on/off等は今後のアップデートで各サーバーごとに設定できるようにする予定です。' })
+                .addFields({ name: 'スパム検知', value: '特定の時間内に数回連続で同じ発言をしたユーザーにタイムアウト処罰を実行します。\nデフォルトで有効ですが、</spam enable:1156623933152440481>で有効化、</spam disable:1156623933152440481>で無効化できます。' })
                 .addFields({ name: 'Token検知', value: '発言内にDiscord内で使用されるTokenが含まれていた場合削除します。\nデフォルトで有効ですが、</token enable:1149662028282208407>で有効化、</token disable:1149662028282208407>で無効化できます。' })
                 .setColor('#3CB371')
                 .setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() });
@@ -290,6 +295,12 @@ client.on('messageCreate', async (message) => {
                     .catch(() => { });
             };
         };
+    };
+    const spamdata = require('./jsons/spam.json');
+    const spamserverId = message.guild.id;
+    const spamData = spamdata[spamserverId];
+    if (spamData && Object.keys(spamData).length > 0) {
+        if (spamData['スパム検知'] === 'disable') return;
     };
     const spamKey = `${message.author.id}-${message.content}`;
     let spamCount = spamMap.get(spamKey) || 0;
