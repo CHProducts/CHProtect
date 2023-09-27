@@ -26,8 +26,7 @@ module.exports = {
             serverData['Token検知'] = subcommand;
             fs.writeFile(`${__dirname}/../jsons/token.json`, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
-                    const errorstack = '```js\n' + err.stack + '```';
-                    interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] })
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: 'エラーが発生しました。後でもう一度お試しください。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 } else {
                     interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を有効化しました。' }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 }
@@ -44,12 +43,11 @@ module.exports = {
             serverData['Token検知'] = subcommand;
             fs.writeFile(`${__dirname}/../jsons/token.json`, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
-                    const errorstack = '```js\n' + err.stack + '```';
-                    interaction.reply({ embeds: [new EmbedBuilder().setTitle(`${err}`).setColor('#ff0000').setDescription(`${errorstack}\n</bugreport:1084336997973364850>でバグを報告してください。`)] })
+                    interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: 'エラーが発生しました。後でもう一度お試しください。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 } else {
                     interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: 'Token検知を無効化しました。' }).setColor('#3CB371').setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() })], ephemeral: true });
                 }
             });
         };
     }
-}
+};
