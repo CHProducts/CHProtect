@@ -286,11 +286,13 @@ client.on('messageCreate', async (message) => {
     const data = require('./jsons/banword.json');
     const serverData = data[serverId];
     if (serverData && Object.keys(serverData).length > 0) {
+        if (!message.guild.members.me.permissions.has(Discord.PermissionsBitField.Flags.ModerateMembers) || !message.guild.members.me.permissions.has(Discord.PermissionsBitField.Flags.ManageMessages)) return message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: '禁止ワード検知', value: '禁止ワードの送信を検知しました。Bot自身にメンバーの管理権限(`ModerateMembers`)、またはメッセージの管理権限(`ManageMessages`)がないため処罰を実行できません。' }).setColor('#ff0000').setFooter({ iconURL: client.user.displayAvatarURL(), text: 'CH Protect 0.0.1' })] });
         for (const text in serverData) {
             if (message.content.includes(text)) {
                 message.member.timeout(serverData[text] * 60 * 1000, 'サーバー内で設定されている禁止ワードの発言')
                     .then(() => {
                         message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: '禁止ワード検知', value: '禁止ワードを発言したためタイムアウトされました。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] })
+                        message.delete();
                     })
                     .catch(() => { });
             };
@@ -306,6 +308,7 @@ client.on('messageCreate', async (message) => {
     let spamCount = spamMap.get(spamKey) || 0;
 
     if (spamCount >= 4) {
+        if (!message.guild.members.me.permissions.has(Discord.PermissionsBitField.Flags.ModerateMembers)) return message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'スパム検知', value: 'スパムを検知しました。Bot自身にメンバーの管理権限(`ModerateMembers`)がないため処罰を実行できません。' }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] });
         message.member.timeout(2 * 60 * 1000, '同じ内容の発言を繰り返したため')
             .then(() => {
                 message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'スパム検知', value: `${message.author}はタイムアウトされました。` }).setColor('ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] })
