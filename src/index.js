@@ -373,6 +373,6 @@ client.login(process.env.TOKEN)
  * @param {Error} error 
  */
 async function stderr(error) {
-    const webhook = new Discord.WebhookClient({ url: process.env.ERRORLOG_URL });
-    await webhook.send({ embeds: [new Discord.EmbedBuilder().setTitle(error.name).addFields({ name: 'ERROR STACK', value: '```js\n' + error.stack + '\n```' }).setTimestamp().setColor('#ff0000')] });
+    const channel = await client.channels.fetch('1155111506107699220');
+    await channel?.send({ embeds: [new Discord.EmbedBuilder().setTitle(error.name).addFields({ name: 'ERROR STACK', value: '```js\n' + error?.stack + '\n```' }).setTimestamp().setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] });
 };
