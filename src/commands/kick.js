@@ -10,7 +10,7 @@ module.exports = {
         const user = interaction.options.getUser('member');
         const member = await interaction.guild.members.fetch(user.id);
         if (!member) return interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Error', value: '存在しないメンバーです。' }).setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() }).setColor('#ff0000')], ephemeral: true });
-        member.timeout(time)
+        member.kick()
             .then(() => {
                 interaction.reply({ embeds: [new EmbedBuilder().addFields({ name: 'Done.', value: '指定したユーザーを追放しました。' }).setFooter({ text: 'CH Protect 0.0.1', iconURL: interaction.client.user.displayAvatarURL() }).setColor('#3CB371')], ephemeral: true });
             })
