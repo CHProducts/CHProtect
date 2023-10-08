@@ -37,7 +37,7 @@ for (const file of ContextFiles) {
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user?.tag}!`);
-    client.user.setActivity('/help | Created By CatHouse Products')
+    client.user.setActivity('/help | Created By CatHouse Products', { type: Discord.ActivityType.Custom });
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -330,7 +330,7 @@ client.on('messageUpdate', async (oldMessage, message) => {
     const tokenData = tokendata[serverId];
     if (tokenData && Object.keys(tokenData).length > 0) {
         if (tokenData['Token検知'] === 'disable') return;
-    }
+    };
     if (message.content.match(/[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27}/)) return await message.delete()
     if (message.embeds.some(embed => {
         return (
