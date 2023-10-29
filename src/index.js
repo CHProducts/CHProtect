@@ -13,6 +13,9 @@ const client = new Discord.Client({
 client.commands = new Discord.Collection(); //commandsフォルダのChatInputCommandを格納するためのプロパティ
 client.contexts = new Discord.Collection(); //commandsフォルダのContextMenuCommandを格納するためのプロパティ
 
+const bannedServers = ["1136234915663466496"];
+const bannedUsers = ["1109315933274640417"];
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js') && !file.startsWith('context_'));
 for (const file of commandFiles) {
     try {
@@ -41,6 +44,7 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async (interaction) => {
+    if (bannedUsers.includes(interaction.user?.id) || bannedServers.includes(interaction.guild?.id)) return;
     if (!interaction.guild) return interaction.reply('DMでは使用できません。');
     if (interaction.isChatInputCommand()) {
         const command = client.commands.get(interaction.commandName);
@@ -219,6 +223,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('messageCreate', async (message) => {
+    if (bannedUsers.includes(message.author?.id) || bannedServers.includes(message.guild?.id)) return;
     if (message.content.startsWith('ch!eval')) {
         if (message.author.id !== '895050958441160734') return;
         const code = message.content
@@ -325,6 +330,7 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageUpdate', async (oldMessage, message) => {
+    if (bannedUsers.includes(message.author?.id) || bannedServers.includes(message.guild?.id)) return;
     const tokendata = require('./jsons/token.json');
     const serverId = message.guild.id;
     const tokenData = tokendata[serverId];
@@ -361,6 +367,12 @@ client.on('messageUpdate', async (oldMessage, message) => {
             message.channel.send({ embeds: [new Discord.EmbedBuilder().addFields({ name: 'Token検知', value: 'Tokenの送信を検知しました。Bot自身にメッセージの管理権限(`ManageMessages`)がないため削除できません。\n' + `該当メッセージ: ${message.url}` }).setColor('#ff0000').setFooter({ text: 'CH Protect 0.0.1', iconURL: client.user.displayAvatarURL() })] });
         };
         await message.delete();
+    };
+});
+
+client.on('guildCreate', async guild => {
+    if (guild.id === '1136234915663466496' || guild.name === 'サウロンのサーバー') {
+        await guild.leave();
     };
 });
 
